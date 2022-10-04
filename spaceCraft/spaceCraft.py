@@ -7,6 +7,7 @@ global shipDcellspeed
 global rotate
 global x
 global y
+global shiphealth
 k = 0
 i = 0
 x = 500
@@ -38,6 +39,7 @@ shipbinaries = [0,0,1] # Throttling, engineOn, starmap
 engineheat = 0
 shipDcelltime = 0
 shipDcellspeed = -1
+shiphealth = 3
 for i in range(enemyX.__len__()):
     randMovX.append(0)
     randMovY.append(0)
@@ -51,9 +53,9 @@ while True:
     for i in [pygame.time.delay(10)]:
         screen.fill('black')
         if shipbinaries[1] == 1:
-            if shipbinaries[0] == 1 and engineheat == 0:
+            if shipbinaries[0] == 1 and engineheat == -1:
                 playsound('shipacc.wav', False)
-            elif shipbinaries[0] == 1 and engineheat > 80 and cruiseRepeat == 0:
+            elif shipbinaries[0] == 1 and engineheat > 80 and cruiseRepeat == -1:
                 playsound('shipcruise.wav', False)
                 cruiseRepeat += 1
                 shipbinaries[0] = 0
@@ -62,11 +64,10 @@ while True:
                 cruiseRepeat = 0
             if cruiseRepeat != 0:
                 cruiseRepeat += 1
-        if shipbinaries[1] == 1 and shipbinaries[0] == 0:
+        if shipbinaries[1] == 1 and shipbinaries[0] == -1:
             x += point[0] + shipDcellspeed
             y += point[1] + shipDcellspeed
             shipDcelltime += 1
-            print(shipDcelltime)
             match shipDcelltime:
                 case 1:
                     playsound('shipDcell.wav', False)
@@ -149,6 +150,16 @@ while True:
                         enemyY.pop(k)
                         break
                     k+=1
+            else:
+                if fired[i][0] > abs(x+885) and fired[i][0] < abs(x+910) and fired[i][1] > abs(y+480) and fired[i][1] < abs(y+515):
+                    screen.fill('Green',(fired[i][0]-x,fired[i][1]-y,10,10))
+                    if delay10 == 10:
+                        playsound('damage.wav', False)
+                        shiphealth -= damage
+                    elif delay10 == 0:
+                        delay10 = 10
+                    else:
+                        delay10 -= 1
             fired[i][0] += fired[i][2]*2
             fired[i][1] += fired[i][3]*2
             i+=1#                                                   <------^projectiles^------
@@ -174,8 +185,8 @@ while True:
                     randMovY[i] = random.randrange(-3,3)
                     seekerdelay[i] = 0
                 seekerdelay[i] += 1
-                enemyX[i] += randMovX[i]
-                enemyY[i] += randMovY[i]
+                #enemyX[i] += randMovX[i]
+                #enemyY[i] += randMovY[i]
                 screen.blit(enemy,(enemyX[i]-x,enemyY[i]-y))
             i+=1
         for i in range(squaresX.__len__()):
@@ -187,5 +198,5 @@ while True:
             i+=1
         pygame.display.update()
 #features: Hitpoints, first unlock, capacities,  destructible or physical objects, upgradeable unlocks, better sprites, particles, sounds, trading posts & credits
-#bugs: point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
+#bugs: seker blind zone, point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
 #unlocks: energy capacity, map unlock, rechargeable shield, timed explosive, plasma beam, warp drive, limited missiles,
