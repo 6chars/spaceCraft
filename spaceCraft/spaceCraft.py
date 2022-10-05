@@ -20,6 +20,7 @@ ship = pygame.transform.rotate(shipLoad, rotate)
 enemy = pygame.image.load('Enemy.png')
 plasma = pygame.image.load('plasma.png')
 bolt = pygame.image.load('bolt.png')
+smallexplosion = pygame.image.load('Small_explosion.png')
 shipPos = [500,500]
 squaresX = []
 squaresY = []
@@ -145,9 +146,9 @@ while True:
             if shipWeapon:
                 for k in range(enemyX.__len__()):
                     if abs(shipWepPos.center[0]) > abs(enemyX[k]-x-20) and abs(shipWepPos.center[0]) < abs(enemyX[k]-x+20) and abs(shipWepPos.center[1]) > abs(enemyY[k]-y-20) and abs(shipWepPos.center[1]) < abs(enemyY[k]-y+20):        
-                        print(abs(shipWepPos.center[0]), abs(enemyX[k]-100))
                         enemyX.pop(k)
                         enemyY.pop(k)
+                        fired[i][4] = 'hit'
                         break
                     k+=1
             else:
@@ -185,10 +186,10 @@ while True:
                     randMovY[i] = random.randrange(-3,3)
                     seekerdelay[i] = 0
                 seekerdelay[i] += 1
-                #enemyX[i] += randMovX[i]
-                #enemyY[i] += randMovY[i]
+                enemyX[i] += randMovX[i]
+                enemyY[i] += randMovY[i]
                 screen.blit(enemy,(enemyX[i]-x,enemyY[i]-y))
-            i+=1
+            i+=1#                                                      <------^Enemy^------
         for i in range(squaresX.__len__()):
             if shipbinaries[2]: 
                 if (squaresX[i]/10)-x/10 < 1800 and (squaresY[i]/10)-y/10 < 1000:
@@ -198,5 +199,5 @@ while True:
             i+=1
         pygame.display.update()
 #features: Hitpoints, first unlock, capacities,  destructible or physical objects, upgradeable unlocks, better sprites, particles, sounds, trading posts & credits
-#bugs: seker blind zone, point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
+#bugs: ship fucking hitbox, seeker blind zone, penetrating projectiles, point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
 #unlocks: energy capacity, map unlock, rechargeable shield, timed explosive, plasma beam, warp drive, limited missiles,
