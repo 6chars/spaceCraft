@@ -54,9 +54,9 @@ while True:
     for i in [pygame.time.delay(10)]:
         screen.fill('black')
         if shipbinaries[1] == 1:
-            if shipbinaries[0] == 1 and engineheat == -1:
+            if shipbinaries[0] == 1 and engineheat == 1:
                 playsound('shipacc.wav', False)
-            elif shipbinaries[0] == 1 and engineheat > 80 and cruiseRepeat == -1:
+            elif shipbinaries[0] == 1 and engineheat > 80 and cruiseRepeat == 0:
                 playsound('shipcruise.wav', False)
                 cruiseRepeat += 1
                 shipbinaries[0] = 0
@@ -65,7 +65,7 @@ while True:
                 cruiseRepeat = 0
             if cruiseRepeat != 0:
                 cruiseRepeat += 1
-        if shipbinaries[1] == 1 and shipbinaries[0] == -1:
+        if shipbinaries[1] == 1 and shipbinaries[0] == 0:
             x += point[0] + shipDcellspeed
             y += point[1] + shipDcellspeed
             shipDcelltime += 1
