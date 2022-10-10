@@ -8,6 +8,7 @@ global rotate
 global x
 global y
 global shiphealth
+global hitdelay
 k = 0
 i = 0
 x = 500
@@ -21,9 +22,11 @@ enemy = pygame.image.load('Enemy.png')
 plasma = pygame.image.load('plasma.png')
 bolt = pygame.image.load('bolt.png')
 smallexplosion = pygame.image.load('Small_explosion.png')
+text = pygame.font.SysFont("Consolas", 20)
 shipPos = [500,500]
 squaresX = []
 squaresY = []
+starStatus = []
 fired = []
 delay10 = 10
 seekerdelay = []
@@ -41,6 +44,7 @@ engineheat = 0
 shipDcelltime = 0
 shipDcellspeed = -1
 shiphealth = 3
+hitdelay = 10
 for i in range(enemyX.__len__()):
     randMovX.append(0)
     randMovY.append(0)
@@ -50,6 +54,7 @@ shipWeapon = False
 for i in range(400):
     squaresX.append(random.randrange(-50000,50000))
     squaresY.append(random.randrange(-50000,50000))
+    starStatus.append('white')
 while True:
     for i in [pygame.time.delay(10)]:
         screen.fill('black')
@@ -82,7 +87,8 @@ while True:
                     shipDcellspeed = -1
                     shipDcelltime = 0
                     shipbinaries[1] = 0
-                    engineheat = 0#         <---------------- ^Ship state measurement and handling^ ----------------
+                    engineheat = 0
+        healthDisplay = screen.blit(text.render('Ship Health: '+ str(shiphealth),True,'White'),(800,900))#         <---------------- ^Ship state measurement and handling^ ----------------
         if rotate >= 360:
             rotate = 0
         elif rotate <= 0:
@@ -152,15 +158,11 @@ while True:
                         break
                     k+=1
             else:
-                if fired[i][0] > abs(x+885) and fired[i][0] < abs(x+910) and fired[i][1] > abs(y+480) and fired[i][1] < abs(y+515):
+                if abs(fired[i][0]-x) > 885 and abs(fired[i][0]-x) < 910 and abs(fired[i][1]-y) > 480 and abs(fired[i][1]-y) < 515:
                     screen.fill('Green',(fired[i][0]-x,fired[i][1]-y,10,10))
-                    if delay10 == 10:
-                        playsound('damage.wav', False)
-                        shiphealth -= damage
-                    elif delay10 == 0:
-                        delay10 = 10
-                    else:
-                        delay10 -= 1
+                    playsound('damage.wav', False)
+                    shiphealth -= damage
+                    fired[i][1] += 9000
             fired[i][0] += fired[i][2]*2
             fired[i][1] += fired[i][3]*2
             i+=1#                                                   <------^projectiles^------
@@ -180,7 +182,7 @@ while True:
                     boltYadd = 1
                 if seekerdelay[i] == 50:
                     boltXadd *= random.randrange(0,10)
-                    boltYadd *= 10-boltXadd
+                    boltYadd *= (10 - abs(boltXadd))
                     fired.append([enemyX[i],enemyY[i],boltXadd,boltYadd,'bolt'])
                     randMovX[i] = random.randrange(-3,3)
                     randMovY[i] = random.randrange(-3,3)
@@ -193,11 +195,12 @@ while True:
         for i in range(squaresX.__len__()):
             if shipbinaries[2]: 
                 if (squaresX[i]/10)-x/10 < 1800 and (squaresY[i]/10)-y/10 < 1000:
-                    screen.fill('white',(((squaresX[i]/10)-x/10)+800,((squaresY[i]/10)-y/10)+500,2,2))                
+                    screen.fill(starStatus[i],(((squaresX[i]/10)-x/10)+800,((squaresY[i]/10)-y/10)+500,2,2))                
             if squaresX[i]-x < 1800 and squaresY[i]-y < 1000 and squaresX[i]-x > 0 and squaresY[i]-y > 0:              
                 screen.fill('blue',(squaresX[i]-x,squaresY[i]-y,20,20))
-            i+=1
+                starStatus[i] = 'green'
+            i+=1#                                                       <------^star rendering^------
         pygame.display.update()
 #features: Hitpoints, first unlock, capacities,  destructible or physical objects, upgradeable unlocks, better sprites, particles, sounds, trading posts & credits
-#bugs: ship fucking hitbox, seeker blind zone, penetrating projectiles, point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
+#bugs: ship fucking hitbox, point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
 #unlocks: energy capacity, map unlock, rechargeable shield, timed explosive, plasma beam, warp drive, limited missiles,
