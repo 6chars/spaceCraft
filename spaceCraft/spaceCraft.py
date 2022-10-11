@@ -202,5 +202,5 @@ while True:
             i+=1#                                                       <------^star rendering^------
         pygame.display.update()
 #features: Hitpoints, first unlock, capacities,  destructible or physical objects, upgradeable unlocks, better sprites, particles, sounds, trading posts & credits
-#bugs: ship fucking hitbox, point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
+#bugs: ship hitbox mystery, point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
 #unlocks: energy capacity, map unlock, rechargeable shield, timed explosive, plasma beam, warp drive, limited missiles,
