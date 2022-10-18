@@ -149,6 +149,7 @@ while True:
                     boltPos = bolt.get_rect(center = (fired[i][0]-x,fired[i][1]-y))
                     screen.blit(bolt,(boltPos))
                     damage = 1
+                    shipWeapon = False
             if shipWeapon:
                 for k in range(enemyX.__len__()):
                     if abs(shipWepPos.center[0]) > abs(enemyX[k]-x-20) and abs(shipWepPos.center[0]) < abs(enemyX[k]-x+20) and abs(shipWepPos.center[1]) > abs(enemyY[k]-y-20) and abs(shipWepPos.center[1]) < abs(enemyY[k]-y+20):        
@@ -202,5 +203,5 @@ while True:
             i+=1#                                                       <------^star rendering^------
         pygame.display.update()
 #features: Hitpoints, first unlock, capacities,  destructible or physical objects, upgradeable unlocks, better sprites, particles, sounds, trading posts & credits
-#bugs: ship hitbox mystery, point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
+#bugs: point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
 #unlocks: energy capacity, map unlock, rechargeable shield, timed explosive, plasma beam, warp drive, limited missiles,
