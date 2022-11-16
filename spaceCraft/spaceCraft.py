@@ -208,40 +208,36 @@ while True:
                 if (squaresX[i]/10)-x/10 < 1800 and (squaresY[i]/10)-y/10 < 1000:
                     screen.fill(starStatus[i],(((squaresX[i]/10)-x/10)+800,((squaresY[i]/10)-y/10)+500,2,2))                
             if squaresX[i]-x < 1800 and squaresY[i]-y < 1000 and squaresX[i]-x > 0 and squaresY[i]-y > 0:
-                if abs(squaresX[i]-x) < 25 and abs(squaresY[i]-y) < 25:
-                    global xp
+                if abs(squaresX[i]-x) > 885 and abs(squaresX[i]-x) < 910 and abs(squaresY[i]-y) > 480 and abs(squaresY[i]-y) < 515:
                     xp = 0
                     section += 20
-                    while True:
-                        for i in [pygame.time.delay(1)]:
-                            screen.fill('black')
-                            pygame.event.get()
-                            key = pygame.key.get_pressed()
-                            if key[pygame.K_a]:
-                                xp -= 1
-                            if key[pygame.K_d]:
-                                xp += 1
-                            for p in range(200):
-                                if terrains[i][4][p] == True:
-                                    screen.fill('grey',(i*50-xp,950,50,50))   
-                                if terrains[i][3][p] == True:
-                                    screen.fill('grey',(i*50-xp,900,50,50))          
-                                if terrains[i][2][p] == True:
-                                    screen.fill('grey',(i*50-xp,850,50,50))    
-                                if terrains[i][1][p] == True:
-                                    screen.fill('grey',(i*50-xp,800,50,50))  
-                                if terrains[i][0][p] == True:
-                                    screen.fill('grey',(i*50-xp,750,50,50)) 
+                    pygame.event.get()
+                    key = pygame.key.get_pressed()
+                    if key[pygame.K_a]:
+                        xp -= 1
+                    if key[pygame.K_d]:
+                        xp += 1
+                    for p in range(200):
+                        if terrains[i][4][p] == True:
+                            screen.fill('grey',(i*50-xp,950,50,50))   
+                        if terrains[i][3][p] == True:
+                            screen.fill('grey',(i*50-xp,900,50,50))          
+                        if terrains[i][2][p] == True:
+                            screen.fill('grey',(i*50-xp,850,50,50))    
+                        if terrains[i][1][p] == True:
+                            screen.fill('grey',(i*50-xp,800,50,50))  
+                        if terrains[i][0][p] == True:
+                            screen.fill('grey',(i*50-xp,750,50,50)) 
                 else:
                     screen.fill('blue',(squaresX[i]-x,squaresY[i]-y,20,20))
                     if starStatus == 'white':
                         section = 0
                         for i in range(200):
-                            terrains[i][0].append(False) #a
-                            terrains[i][1].append(False) #b
-                            terrains[i][2].append(False) #c
-                            terrains[i][3].append(False) #d
-                            terrains[i][4].append(True) #e
+                            terrains[i][0].append(False) 
+                            terrains[i][1].append(False) 
+                            terrains[i][2].append(False) 
+                            terrains[i][3].append(False) 
+                            terrains[i][4].append(True) 
                         for i in range(10):
                             dPush = random.randrange(0,6)
                             dWide = random.randrange(0,16)
