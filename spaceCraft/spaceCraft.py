@@ -31,6 +31,8 @@ squaresX = []
 squaresY = []
 starStatus = []
 terrains = []
+section = 0
+length = 0
 fired = []
 delay10 = 10
 seekerdelay = []
@@ -62,7 +64,6 @@ for i in range(400):
     squaresY.append(random.randrange(-50000,50000))
     starStatus.append('white')
     terrains.append([[],[],[],[],[]])
-
 while True:
     for i in [pygame.time.delay(10)]:
         screen.fill('black')
@@ -230,28 +231,32 @@ while True:
                             screen.fill('grey',(i*50-xp,750,50,50)) 
                 else:
                     screen.fill('blue',(squaresX[i]-x,squaresY[i]-y,20,20))
-                    if starStatus == 'white':
+                    if starStatus[i] == 'white':
                         section = 0
-                        for i in range(200):
+                        for length in range(200):
                             terrains[i][0].append(False) 
                             terrains[i][1].append(False) 
                             terrains[i][2].append(False) 
                             terrains[i][3].append(False) 
                             terrains[i][4].append(True) 
-                        for i in range(10):
+                        for sec in range(10):
                             dPush = random.randrange(0,6)
                             dWide = random.randrange(0,16)
-                            for i in range(dWide):
-                                terrains[i][3][dPush+i+section] = True
+                            for length in range(dWide):
+                                print(i)
+                                terrains[i][3][dPush+length+section] = True
                                 if random.randrange(0,6) > 2:
-                                    terrains[i][2][dPush+i+section] = True
+                                    terrains[i][2][dPush+length+section] = True
                                     if random.randrange(0,6) > 2:
-                                        terrains[i][1][dPush+i+section] = True
+                                        terrains[i][1][dPush+length+section] = True
                                         if random.randrange(0,6) > 2:
-                                            terrains[i][0][dPush+i+section] = True
+                                            terrains[i][0][dPush+length+section] = True
                         starStatus[i] = 'green'
             i+=1#                                                       <------^astral rendering^------
-        pygame.display.update()
+        pygame.display.update()           
 #features: Hitpoints, first unlock, capacities,  destructible or physical objects, upgradeable unlocks, better sprites, particles, sounds, trading posts & credits
 #bugs: point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
-#unlocks: terrain scanner, energy capacity, map unlock, rechargeable shield, timed explosive, plasma beam, warp drive, limited missiles,
+#unlocks: terrain scanner, map unlock, rechargeable shield, timed explosive, plasma beam, warp drive, limited missiles,
+
+# I is ideally only used for least specific data, 
+# hitboxes are calculated by {abs(thing-x or y) > or < position}1..4, ship hitbox is 885,910,480,515
