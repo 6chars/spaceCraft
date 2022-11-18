@@ -7,6 +7,9 @@ global shipDcellspeed
 global rotate
 global x
 global y
+global undefX
+global undefY
+global enviroment
 global shiphealth
 global shipfuel
 global fueldrain
@@ -27,6 +30,7 @@ bolt = pygame.image.load('bolt.png')
 smallexplosion = pygame.image.load('Small_explosion.png')
 text = pygame.font.SysFont("Consolas", 20)
 shipPos = [500,500]
+enviroment = 'space'
 squaresX = []
 squaresY = []
 starStatus = []
@@ -73,7 +77,6 @@ while True:
             elif shipbinaries[0] == 1 and engineheat > 80 and cruiseRepeat == 0:
                 playsound('shipcruise.wav', False)
                 cruiseRepeat += 1
-                shipbinaries[0] = 0
             engineheat += 1
             if cruiseRepeat == 50:
                 cruiseRepeat = 0
@@ -98,7 +101,7 @@ while True:
                     shipbinaries[1] = 0
                     engineheat = 0
         healthDisplay = screen.blit(text.render('Ship Health: '+ str(shiphealth),True,'White'),(800,900))
-        fuelDisplay = screen.blit(text.render('Fuel: '+ str(shipfuel),True,'White'),(800,950))#         <---------------- ^Ship state measurement and handling^ ----------------
+        fuelDisplay = screen.blit(text.render('Fuel: '+ str(shipfuel),True,'White'),(800,950))#         <---------------- ^Ship state measurement and handling^ ---------------- Brought to you by Vyvance
         if rotate >= 360:
             rotate = 0
         elif rotate <= 0:
@@ -112,22 +115,28 @@ while True:
         if key[pygame.K_w]:
             shipbinaries[0] = 1
             shipbinaries[1] = 1
+            undefX = 0
+            undefY = 0
             point = [x,y]
             if rotate >= 270:
-                y -= (rotate - 270) / 10
-                x += abs(rotate - 360) / 10
+                undefY -= (rotate - 270) / 10
+                undefX += abs(rotate - 360) / 10
             elif rotate >= 180:
-                y += abs(rotate - 270) / 10
-                x += (rotate - 180) / 10
+                undefY += abs(rotate - 270) / 10
+                undefX += (rotate - 180) / 10
             elif rotate >= 90:
-                y += (rotate - 90) / 10
-                x -= abs(rotate - 180) / 10
+                undefY += (rotate - 90) / 10
+                undefX -= abs(rotate - 180) / 10
             elif rotate >= 0:
-                y -= abs(rotate - 90) / 10
-                x -= rotate / 10
-            point[0] = x-point[0]
-            point[1] = y-point[1]
+                undefY -= abs(rotate - 90) / 10
+                undefX -= rotate / 10
             shipfuel -= fueldrain
+            match enviroment:
+                case 'space':
+                    x += undefX
+                    y += undefY
+            point[0] = x - point[0]
+            point[1] = y - point[1]
         else:
             shipbinaries[0] = 0
         if key[pygame.K_m]:
@@ -210,6 +219,7 @@ while True:
                     screen.fill(starStatus[i],(((squaresX[i]/10)-x/10)+800,((squaresY[i]/10)-y/10)+500,2,2))                
             if squaresX[i]-x < 1800 and squaresY[i]-y < 1000 and squaresX[i]-x > 0 and squaresY[i]-y > 0:
                 if abs(squaresX[i]-x) > 885 and abs(squaresX[i]-x) < 910 and abs(squaresY[i]-y) > 480 and abs(squaresY[i]-y) < 515:
+                    enviroment = 'planet'
                     xp = 0
                     section += 20
                     pygame.event.get()
@@ -230,6 +240,7 @@ while True:
                         if terrains[i][0][p] == True:
                             screen.fill('grey',(i*50-xp,750,50,50)) 
                 else:
+                    enviroment = 'space'
                     screen.fill('blue',(squaresX[i]-x,squaresY[i]-y,20,20))
                     if starStatus[i] == 'white':
                         section = 0
@@ -243,7 +254,6 @@ while True:
                             dPush = random.randrange(0,6)
                             dWide = random.randrange(0,16)
                             for length in range(dWide):
-                                print(i)
                                 terrains[i][3][dPush+length+section] = True
                                 if random.randrange(0,6) > 2:
                                     terrains[i][2][dPush+length+section] = True
@@ -255,8 +265,8 @@ while True:
             i+=1#                                                       <------^astral rendering^------
         pygame.display.update()           
 #features: Hitpoints, first unlock, capacities,  destructible or physical objects, upgradeable unlocks, better sprites, particles, sounds, trading posts & credits
-#bugs: point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
+#bugs: phantom projectiles, point not defined on start and turn, 30 projectiles simulated indefinately, static projectile image
 #unlocks: terrain scanner, map unlock, rechargeable shield, timed explosive, plasma beam, warp drive, limited missiles,
 
 # I is ideally only used for least specific data, 
-# hitboxes are calculated by {abs(thing-x or y) > or < position}1..4, ship hitbox is 885,910,480,515
+# hitboxes are calculated by {if abs(thing-x or y) > or < thingLocation}1..4, ship hitbox is 885,910,480,515
