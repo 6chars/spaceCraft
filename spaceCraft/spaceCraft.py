@@ -83,8 +83,10 @@ while True:
             if cruiseRepeat != 0:
                 cruiseRepeat += 1
         if shipbinaries[1] == 1 and shipbinaries[0] == 0:
-            x += point[0] + shipDcellspeed
-            y += point[1] + shipDcellspeed
+            match enviroment:
+                case 'space':
+                    x += point[0] + shipDcellspeed
+                    y += point[1] + shipDcellspeed
             shipDcelltime += 1
             match shipDcelltime:
                 case 1:
@@ -135,6 +137,8 @@ while True:
                 case 'space':
                     x += undefX
                     y += undefY
+                case 'terrain':
+                    xp += undefX
             point[0] = x - point[0]
             point[1] = y - point[1]
         else:
@@ -220,29 +224,30 @@ while True:
             if squaresX[i]-x < 1800 and squaresY[i]-y < 1000 and squaresX[i]-x > 0 and squaresY[i]-y > 0:
                 if abs(squaresX[i]-x) > 885 and abs(squaresX[i]-x) < 910 and abs(squaresY[i]-y) > 480 and abs(squaresY[i]-y) < 515:
                     enviroment = 'planet'
-                    xp = 0
                     section += 20
                     pygame.event.get()
                     key = pygame.key.get_pressed()
                     if key[pygame.K_a]:
-                        xp -= 1
+                        xp -= 10
                     if key[pygame.K_d]:
-                        xp += 1
+                        xp += 10
                     for p in range(200):
                         if terrains[i][4][p] == True:
-                            screen.fill('grey',(i*50-xp,950,50,50))   
+                            print('works')
+                            screen.fill('grey',(p*50-xp,950,50,50))   
                         if terrains[i][3][p] == True:
-                            screen.fill('grey',(i*50-xp,900,50,50))          
+                            screen.fill('grey',(p*50-xp,900,50,50))          
                         if terrains[i][2][p] == True:
-                            screen.fill('grey',(i*50-xp,850,50,50))    
+                            screen.fill('grey',(p*50-xp,850,50,50))    
                         if terrains[i][1][p] == True:
-                            screen.fill('grey',(i*50-xp,800,50,50))  
+                            screen.fill('grey',(p*50-xp,800,50,50))  
                         if terrains[i][0][p] == True:
-                            screen.fill('grey',(i*50-xp,750,50,50)) 
+                            screen.fill('grey',(p*50-xp,750,50,50))
                 else:
                     enviroment = 'space'
                     screen.fill('blue',(squaresX[i]-x,squaresY[i]-y,20,20))
                     if starStatus[i] == 'white':
+                        xp = 0
                         section = 0
                         for length in range(200):
                             terrains[i][0].append(False) 
@@ -261,6 +266,7 @@ while True:
                                         terrains[i][1][dPush+length+section] = True
                                         if random.randrange(0,6) > 2:
                                             terrains[i][0][dPush+length+section] = True
+                            section += 20
                         starStatus[i] = 'green'
             i+=1#                                                       <------^astral rendering^------
         pygame.display.update()           
