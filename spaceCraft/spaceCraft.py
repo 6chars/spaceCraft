@@ -7,6 +7,8 @@ global shipDcellspeed
 global rotate
 global x
 global y
+global xp
+global ys
 global undefX
 global undefY
 global enviroment
@@ -19,6 +21,7 @@ k = 0
 i = 0
 x = 500
 y = 500
+ys = 0
 #  use camelcase reasonably
 rotate = 0.0
 screen = pygame.display.set_mode((1800,1000))
@@ -104,6 +107,8 @@ while True:
                     engineheat = 0
         healthDisplay = screen.blit(text.render('Ship Health: '+ str(shiphealth),True,'White'),(800,900))
         fuelDisplay = screen.blit(text.render('Fuel: '+ str(shipfuel),True,'White'),(800,950))#         <---------------- ^Ship state measurement and handling^ ---------------- Brought to you by Vyvance
+        ship = pygame.transform.rotate(shipLoad, rotate)
+        shipPos = ship.get_rect(center = (900,500+ys))
         if rotate >= 360:
             rotate = 0
         elif rotate <= 0:
@@ -137,10 +142,11 @@ while True:
                 case 'space':
                     x += undefX
                     y += undefY
-                case 'terrain':
+                    point[0] = x - point[0]
+                    point[1] = y - point[1]
+                case 'planet':
                     xp += undefX
-            point[0] = x - point[0]
-            point[1] = y - point[1]
+                    ys += undefY
         else:
             shipbinaries[0] = 0
         if key[pygame.K_m]:
@@ -158,8 +164,6 @@ while True:
                 delay10 = 10
             else:
                 delay10 -= 1#                                  <------^Ship input^------
-        ship = pygame.transform.rotate(shipLoad, rotate)
-        shipPos = ship.get_rect(center = (900,500))
         screen.blit(ship,(shipPos))
         if fired.__len__() > 30:
             fired.pop(0)
@@ -225,15 +229,8 @@ while True:
                 if abs(squaresX[i]-x) > 885 and abs(squaresX[i]-x) < 910 and abs(squaresY[i]-y) > 480 and abs(squaresY[i]-y) < 515:
                     enviroment = 'planet'
                     section += 20
-                    pygame.event.get()
-                    key = pygame.key.get_pressed()
-                    if key[pygame.K_a]:
-                        xp -= 10
-                    if key[pygame.K_d]:
-                        xp += 10
                     for p in range(200):
                         if terrains[i][4][p] == True:
-                            print('works')
                             screen.fill('grey',(p*50-xp,950,50,50))   
                         if terrains[i][3][p] == True:
                             screen.fill('grey',(p*50-xp,900,50,50))          
@@ -243,6 +240,9 @@ while True:
                             screen.fill('grey',(p*50-xp,800,50,50))  
                         if terrains[i][0][p] == True:
                             screen.fill('grey',(p*50-xp,750,50,50))
+                    if ys < -500:
+                        y -= 30
+                        ys = 0
                 else:
                     enviroment = 'space'
                     screen.fill('blue',(squaresX[i]-x,squaresY[i]-y,20,20))
